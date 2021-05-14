@@ -12,8 +12,8 @@ public class Parser {
   private final Lexer lexer;
   private final Stack<Integer> States_stack;
   private final Stack<Node>    Nodes_stack;
-  private final Map<Interger_Str,String> Action_Table;
-  private final Map<Interger_Str,String>Goto_Table;
+  private final Map<Integer_Str,String> Action_Table;
+  private final Map<Integer_Str,String>Goto_Table;
   private final List<Production> productions;
   private final Map<Integer,String> map;
   private final HashMap<Node,Integer> child_index=new HashMap<>();
@@ -60,7 +60,7 @@ public class Parser {
                   lexeme=((Word)token).getLexeme();
                   break;
           }
-          String action=Action_Table.get(new Interger_Str(current_state,lexeme));
+          String action=Action_Table.get(new Integer_Str(current_state,lexeme));
           if(action==null)
           {
               System.out.println("Syntax error at line:"+lexer.getLine());
@@ -91,7 +91,7 @@ public class Parser {
               }
               int t=States_stack.peek();
               States_stack.push(Integer.valueOf(
-                      Goto_Table.get(new Interger_Str(t,productions.get(production_index).getLeft()))));
+                      Goto_Table.get(new Integer_Str(t,productions.get(production_index).getLeft()))));
               //The top is parent node's state,from which we can recover the parent node
               t=States_stack.peek();
               Word parent_word=new Word(map.get(t),t);
@@ -102,7 +102,6 @@ public class Parser {
                   reversed_children.add(children.get(i));
               parent.AddChildren(reversed_children);
               Nodes_stack.push(parent);
-              System.out.println(productions.get(production_index));
           }
           else if(action.equals("accept")) {//Parsing successful!
               root=Nodes_stack.peek();

@@ -1,5 +1,5 @@
 int main(){
-  int[6] money;
+  int[6][5] money;
   float b;
   float c;
   struct{
@@ -7,9 +7,9 @@ int main(){
   int d;
   }stu;
   if(b>c)
-  money[2]=5 ;
+  money[2][3]=5 ;
   else
-  money[1]=3;
+  money[1][1]=3;
   while(b>c)
   c=c+1;
   add(3,5,);
