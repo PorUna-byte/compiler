@@ -41,4 +41,8 @@ public class Type extends Word {
     Float = new Type("float",Tag.BASIC,8),
     Char = new Type("char",Tag.BASIC,1),
     Bool = new Type("bool" ,Tag.BASIC,1);
+    @Override
+    public String toString() {
+        return this.getLexeme();
+    }
 }

@@ -1,20 +1,23 @@
-   while(num!=100)
-   {
-   /* gaasgg
-   sgghhhh**3 */
-   $
-   //kkfkk
-   /*sg
-   asgha
-   ash*/
-   float f;
-   int _c1,Bb2;
-   "hello,world!\t\n\"hjhkk\"mmk,s"
-    _c1+=0x017;
-    Bb2%=0072;
-    ~
-    c++;
-    ++b;
-    c>=b;
-    f=332.115E+2;
-   }
+int main(){
+  int[6] money;
+  float b;
+  float c;
+  struct{
+  int a;
+  int d;
+  }stu;
+  if(b>c)
+  money[2]=5 ;
+  else
+  money[1]=3;
+  while(b>c)
+  c=c+1;
+  add(3,5,);
+  return 9;
+}
+int add(int a;int b;)
+{
+  int c;
+  c=a+b;
+  return c;
+}

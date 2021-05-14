@@ -11,6 +11,6 @@ public class Num extends Token{
 
     @Override
     public String toString() {
-        return value+"\t\t<"+Tag.maps.get(this.getTag())+" , "+value+">";
+        return "num :"+value+" ("+this.getLine()+")";
     }
 }
