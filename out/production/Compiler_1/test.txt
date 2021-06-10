@@ -1,7 +1,16 @@
+int add(int a,int b,)
+{
+  int c;
+  c=a+b;
+  return c;
+}
 int main(){
   int[6][5] money;
+  int ***pointer;
   float b;
   float c;
+  int d;
+  int a;
   struct{
   int a;
   int d;
@@ -9,15 +18,37 @@ int main(){
   if(b>c)
   money[2][3]=5 ;
   else
+  {
+  if(c<d)
   money[1][1]=3;
-  while(b>c)
+  else
+  money[1][3]=8;
+  }
+  while(b>c&&b!=0)
+  {
+  b=5;
   c=c+1;
+  }
+  c=3;
   add(3,5,);
+  do
+  {
+   b=(c+d)*3;
+   d=d-1;
+  }while(d>0);
+  c=c+1;
+  for(;d<10;d=d+1;)
+  {
+    b=c*3.2;
+  }
+  while(a>d)
+  {
+     for(;b>c;;)
+     {
+     if(c>b)
+      break;
+      }
+      break;
+  }
   return 9;
-}
-int add(int a;int b;)
-{
-  int c;
-  c=a+b;
-  return c;
 }

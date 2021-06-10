@@ -1,0 +1,18 @@
+int main()
+{
+ int a;
+ int b;
+ int c;
+ int d;
+ while(a<c&&b<d)
+ {
+   if(a==1)
+   c=c+1;
+   else
+   {
+    while(a<=d)
+      a=a+2;
+   }
+ }
+ return 0;
+}

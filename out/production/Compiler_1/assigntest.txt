@@ -1,0 +1,45 @@
+int main(int a,float b,){
+  int a1;
+  int a2;
+  int a3;
+  float b1;
+  float b2;
+  float b3;
+  struct{
+  int a1;
+  int a2;
+  }stu1;
+  struct{
+  float b1;
+  float b2;
+  }stu2;
+  struct{
+  int a1;
+  float b1;
+  struct{
+  int a1;
+  float b1;
+  }stu1;
+  }stu3;
+  int [3][5][3]array1;
+  float [4][4]array2;
+  a1=a1+a2;
+  b1=b2+b3;
+  a1=array1[2][3][2];
+  b1=array2[3][1];
+  array1[3][2][1]=a2;
+  array2[1][3]=b2;
+   //a1=3.5;
+   //b1=b2+4;
+   //a1=a1+b1;
+   //c=a+b;
+   //int a1;
+   //a1=b1;
+   //a1=a1+b1;
+  //a1=array1[2.4][2];
+  //a1.a2=3;
+  //a1[2][1]=3;
+  //array1[1]=3;
+  //array1[1][2][1]=3;
+  return 0;
+}

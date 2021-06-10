@@ -1,0 +1,28 @@
+programs'::basic epsilon
+programs::basic epsilon
+program::basic
+block::{
+decls::basic epsilon struct
+decl::basic struct
+type::basic struct
+type'::[ epsilon
+stmts::id if while do break { epsilon return
+stmt::id if while do break { return
+parameter::! -
+parameters::! - epsilon
+loc::id
+loc'::[ epsilon
+bool::! -
+bool'::|| epsilon
+join::! -
+join'::&& epsilon
+equality::! -
+equality'::== != epsilon
+rel::! -
+expr::! -
+expr'::+ - epsilon
+term::! -
+term'::* / epsilon
+unary::! -
+unary::( id num real true false
+factor::( id num real true false

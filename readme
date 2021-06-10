@@ -1,12 +1,10 @@
 该压缩包包含实验源程序与测试程序。
 
-Parser包里面即为本次语法分析实验的源程序
+Inter包里面即为本次语义分析实验的源程序
 
-助教可以直接运行其中test(与src包同一级)包中的Parser_Test来获得语法分析树
-Collection_of_setsTest来获得所有的项目集
-LRTableGen_Test来获得LRTable(ACTION,GOTO)
-
-测试用例为test.txt
+助教可以直接运行其中test(与src包同一级)包中的Inter包中_ExecuteTest来获得符号表和三地址码
+测试用例为test.txt（也可自行更换为assigntest.txt专门测试赋值语句或者controltest.txt专门测试控制语句）
 文法定义在grammar.txt
-
-注意到:本次实验需要使用到测试框架，需要在lib中添加一些.jar，具体可看lib包
+翻译模式在SDTpattern.txt
+注意到:本次实验需要使用到测试框架，需要在lib中添加一些.jar，具体可看lib包.
+因为没有使用回填技术(back patching),所以产生的三地址码中会有很多冗余的label，为此感到十分抱歉。

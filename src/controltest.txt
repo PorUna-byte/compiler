@@ -1,0 +1,19 @@
+int main()
+{
+    int a;
+    int b;
+    int c;
+    int d;
+    float [3][4]ff;
+    while(a>b||c<d)
+    {
+      if(a>c)
+        ff[2][2]=3.2;
+      else
+        {
+          if(a>d)
+          ff[2][2]=4.4;
+        }
+    }
+    return 0;
+}

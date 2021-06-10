@@ -1,15 +1,19 @@
 package parser;
 
+import Inter.Execute_Marker;
+import Inter.Execute_Synthetic;
+import Inter.Share;
 import lexer.Lexer;
 import lexer.Tag;
 import lexer.Token;
 import lexer.Word;
+import symbols.Env;
 
 import java.io.IOException;
 import java.util.*;
 
 public class Parser {
-  private final Lexer lexer;
+  private  Lexer lexer;
   private final Stack<Integer> States_stack;
   private final Stack<Node>    Nodes_stack;
   private final Map<Integer_Str,String> Action_Table;
@@ -17,9 +21,8 @@ public class Parser {
   private final List<Production> productions;
   private final Map<Integer,String> map;
   private final HashMap<Node,Integer> child_index=new HashMap<>();
-  private Node root=null;
+  public Node root=null;
   public Parser() throws IOException {
-      lexer=new Lexer("src/test.txt");
       States_stack=new Stack<>();
       Nodes_stack=new Stack<>();
       LRTableGen lrTableGen=new LRTableGen();
@@ -31,13 +34,9 @@ public class Parser {
       Goto_Table=lrTableGen.getGoto_Table();
       States_stack.push(initialState);
   }
-
-    public Node getRoot() {
-        return root;
-    }
-
-    public void parse() throws IOException
+    public void parse(String file) throws IOException
   {
+      lexer=new Lexer(file);
       Token token = lexer.scan();
       while (true) {
           int current_state=States_stack.peek();
@@ -53,9 +52,6 @@ public class Parser {
               case Tag.ID:
                   lexeme="id";
                   break;
-              case Tag.BASIC:
-                  lexeme="basic";
-                  break;
               default:
                   lexeme=((Word)token).getLexeme();
                   break;
@@ -64,6 +60,7 @@ public class Parser {
           if(action==null)
           {
               System.out.println("Syntax error at line:"+lexer.getLine());
+              System.exit(-1);
               break;
           }
           if(action.startsWith("s"))
@@ -78,8 +75,9 @@ public class Parser {
           {
               Integer production_index=Integer.valueOf(action.substring(1));
               List<Node> children=new ArrayList<>();
-              if(!productions.get(production_index).getRight().contains("epsilon")) {
-                  for (int i = 0; i < productions.get(production_index).getRight().size(); i++) {
+              List<String> right=productions.get(production_index).getRight();
+              if(!right.contains("epsilon")) { //more specifically :A->epsilon or M->epsilon
+                  for (int i = 0; i < right.size(); i++) {
                       States_stack.pop();
                       Node child = Nodes_stack.pop(); //collect children of a parent node
                       children.add(child);
@@ -87,6 +85,13 @@ public class Parser {
               }
               else
               {
+                  //A->epsilon or M(a marker)->epsilon
+                  if(productions.get(production_index).getLeft().startsWith("M")) //A marker,some semantic action must be done
+                  {
+                     Execute_Marker _executeMarker =new Execute_Marker(Integer.valueOf(
+                             productions.get(production_index).getLeft().substring(1)),this.Nodes_stack);
+                     _executeMarker.Execute();
+                  }
                   children.add(new Node(new Word("epsilon",Tag.EPSILON)));
               }
               int t=States_stack.peek();
@@ -101,7 +106,11 @@ public class Parser {
               for(int i=children.size()-1;i>=0;i--)
                   reversed_children.add(children.get(i));
               parent.AddChildren(reversed_children);
-              Nodes_stack.push(parent);
+              Nodes_stack.push(parent);//now the reduction from beta to A is done A->beta
+//              we need to do some synthetic attributes evaluation if necessary
+              Execute_Synthetic _executeSynthe =new Execute_Synthetic(
+                      production_index,this.Nodes_stack);
+              _executeSynthe.Execute();
           }
           else if(action.equals("accept")) {//Parsing successful!
               root=Nodes_stack.peek();

@@ -58,7 +58,7 @@ public class Productions_Builder {
         List<String> Grammars=new ArrayList<>();
         BufferedReader bufferedReader=new BufferedReader(new FileReader("src/grammar.txt"));
         String newline= bufferedReader.readLine();
-        while (newline!=null) {  //read productions from grammar.txt
+        while (newline!=null) {  //read productions from deprecated_grammar.txt
             Grammars.add(newline);
             newline=bufferedReader.readLine();
         }

@@ -1,0 +1,61 @@
+programs'->programs
+programs->program programs
+programs->epsilon
+program->basic id ( decls ) block
+block->{ decls stmts }
+decls->decl decls
+decls->epsilon
+decl->type id ;
+type->basic type'
+type->struct { decls } type'
+type'->[ num ] type'
+type'->epsilon
+stmts->stmt stmts
+stmts->epsilon
+stmt->loc = bool ;
+stmt->if ( bool ) stmt
+stmt->if ( bool ) stmt else stmt
+stmt->while ( bool ) stmt
+stmt->do stmt while ( bool ) ;
+stmt->break ;
+stmt->return bool ;
+stmt->id ( parameters ) ;
+stmt->block
+parameters->parameter , parameters
+parameters->epsilon
+parameter->bool
+loc->id loc'
+loc'->[ bool ] loc'
+loc'->epsilon
+bool->join bool'
+bool'->|| join bool'
+bool'->epsilon
+join->equality join'
+join'->&& equality join'
+join'->epsilon
+equality->rel equality'
+equality'->== rel equality'
+equality'->!= rel equality'
+equality'->epsilon
+rel->expr < expr
+rel->expr <= expr
+rel->expr > expr
+rel->expr >= expr
+rel->expr
+expr->term expr'
+expr'->+ term expr'
+expr'->- term expr'
+expr'->epsilon
+term->unary term'
+term'->* unary term'
+term'->/ unary term'
+term'->epsilon
+unary->! unary
+unary->- unary
+unary->factor
+factor->( bool )
+factor->loc
+factor->num
+factor->real
+factor->true
+factor->false

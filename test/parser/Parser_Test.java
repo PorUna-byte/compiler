@@ -7,7 +7,7 @@ public class Parser_Test {
     public void ParserTest(){
         try {
            Parser parser= new Parser();
-           parser.parse();
+           parser.parse("src/test.txt");
            parser.Print_Tree();
         }
         catch (Exception e)

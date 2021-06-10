@@ -4,24 +4,18 @@ import lexer.Tag;
 import lexer.Word;
 
 public class Type extends Word {
-    private final int width;
-
+    private  final int width;
     public int getWidth() {
         return width;
     }
-
     public Type(String lexeme , int tag , int width)
     {
         super(lexeme,tag);
         this.width=width;
     }
-
     public static boolean numeric(Type P)
     {
-        if((P==Type.Char) || (P==Type.Float) || (P==Type.Int))
-            return true;
-        else
-            return false;
+        return (P == Type.Float) || (P == Type.Int);
     }
     //The function is useful for type conversions.
     public static Type max(Type P1, Type P2)
@@ -33,16 +27,17 @@ public class Type extends Word {
         else if(P1==Type.Int||P2==Type.Int)
             return Type.Int;
         else
-            return Type.Char;
+            return null;
     }
     //singleton basic types,for simplicity
     public static final Type
-    Int = new Type("int", Tag.BASIC,4),
-    Float = new Type("float",Tag.BASIC,8),
-    Char = new Type("char",Tag.BASIC,1),
-    Bool = new Type("bool" ,Tag.BASIC,1);
+    Int = new Type("int", Tag.INT,4),
+    Float = new Type("float",Tag.FLOAT,8),
+    Char = new Type("char",Tag.CHAR,1),
+    Bool = new Type("bool" ,Tag.BOOL,1),
+    VOID = new Type("void",Tag.VOID,0);
     @Override
     public String toString() {
-        return this.getLexeme();
+        return "type:"+this.getLexeme()+"\t"+"width:"+this.width;
     }
 }

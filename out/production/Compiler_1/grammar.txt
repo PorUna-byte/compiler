@@ -1,63 +1,69 @@
 programs'->programs
 programs->program programs
 programs->epsilon
-program->retype id ( decls ) block
-retype->basic
-retype->void
-block->{ decls stmts }
-decls->decl decls
-decls->epsilon
-decl->type id ;
-type->basic type'
-type->struct { decls } type'
-type'->[ num ] type'
-type'->epsilon
+program->basic id ( M0 para_decl ) { decl stmts return expr ; }
+para_decl->type id , M1 para_decl
+para_decl->epsilon
+block->{ M0 decl stmts }
+decl->type id ; M2 decl
+decl->epsilon
+type->basic M3 column
+type->struct { M4 decl }
+basic->int
+basic->float
+basic->void
+column->epsilon
+column->[ num ] column
 stmts->stmt stmts
 stmts->epsilon
-stmt->loc = bool ;
+stmt->id = expr ;
+stmt->left_array = expr ;
+stmt->left_str id = expr ;
+expr->expr + term
+expr->expr - term
+factor->id
+expr->left_array
+expr->left_str id
+factor->num
+factor->real
+left_str->id .
+left_str->left_str id .
+left_array->id [ expr ]
+left_array->left_array [ expr ]
 stmt->if ( bool ) stmt
 stmt->if ( bool ) stmt else stmt
 stmt->while ( bool ) stmt
-stmt->do stmt while ( bool ) ;
-stmt->break ;
-stmt->return bool ;
-stmt->id ( parameters ) ;
+stmt->id ( expr_list ) ;
 stmt->block
-parameters->parameter , parameters
-parameters->epsilon
-parameter->bool
-loc->id loc'
-loc'->[ bool ] loc'
-loc'->epsilon
-bool->join bool'
-bool'->|| join bool'
-bool'->epsilon
-join->equality join'
-join'->&& equality join'
-join'->epsilon
-equality->rel equality'
-equality'->== rel equality'
-equality'->!= rel equality'
-equality'->epsilon
-rel->expr < expr
-rel->expr <= expr
-rel->expr > expr
-rel->expr >= expr
-rel->expr
-expr->term expr'
-expr'->+ term expr'
-expr'->- term expr'
-expr'->epsilon
-term->unary term'
-term'->* unary term'
-term'->/ unary term'
-term'->epsilon
-unary->! unary
-unary->- unary
-unary->factor
-factor->( bool )
-factor->loc
-factor->num
-factor->real
-factor->true
-factor->false
+expr_list->expr_list expr ,
+expr_list->epsilon
+bool->bool || bool
+bool->bool && bool
+bool->! bool
+bool->expr rel expr
+bool->true
+bool->false
+rel-><
+rel-><=
+rel->>
+rel->>=
+rel->==
+rel->!=
+M0->epsilon
+M1->epsilon
+M2->epsilon
+M3->epsilon
+M4->epsilon
+type->basic M3 star
+star->* star
+star->epsilon
+stmt->do stmt while ( bool ) ;
+stmt_semi->stmt
+stmt_semi->;
+stmt->for ( stmt_semi bool ; stmt_semi ) stmt
+stmt->break ;
+expr->term
+term->term * factor
+term->term / factor
+term->factor
+factor->( expr )

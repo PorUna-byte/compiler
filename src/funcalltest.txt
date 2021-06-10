@@ -1,0 +1,13 @@
+int add(int a,int b,)
+{
+  a=4;
+  b=3;
+  return a+b;
+}
+int main(){
+  float ****pointer;
+  int c;
+  int d;
+  add(d,c,);
+  return 1;
+}

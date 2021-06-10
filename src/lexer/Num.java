@@ -9,6 +9,10 @@ public class Num extends Token{
         this.value=value;
     }
 
+    public int getValue() {
+        return value;
+    }
+
     @Override
     public String toString() {
         return "num :"+value+" ("+this.getLine()+")";

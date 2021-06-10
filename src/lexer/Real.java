@@ -9,6 +9,10 @@ public class Real extends Token{
         this.value=value;
     }
 
+    public float getValue() {
+        return value;
+    }
+
     @Override
     public String toString() {
         return "real: "+value+" ("+this.getLine()+")";

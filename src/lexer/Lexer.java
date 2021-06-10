@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Hashtable;
 
 public class Lexer {
-   private  int line =1; //record the line number
+   public static int line =1; //record the line number
    private char peek=' '; //the current character
    private final BufferedReader bufferedReader;
    private  final File file;
@@ -33,12 +33,15 @@ public class Lexer {
        reserve(new Word("return",Tag.RETURN));
        reserve(new Word("struct",Tag.STRUCT));
        reserve(new Word("void",Tag.VOID));
+       reserve(new Word("for",Tag.FOR));
+       reserve(new Word("switch",Tag.SWITCH));
        reserve(Word.True);
        reserve(Word.False);
        reserve(Type.Int);
        reserve(Type.Char);
        reserve(Type.Bool);
        reserve(Type.Float);
+       reserve(Type.VOID);
        bufferedReader=new BufferedReader(new FileReader(filename));
        file=new File(filename);
    }
@@ -198,8 +201,6 @@ public class Lexer {
            words.put(s,w);
            return w;
        }
-       if(peek=='$')
-           return new Word("$",'$');
        Token tok=new Word(peek+"",peek);
        peek=' ';
        return tok;

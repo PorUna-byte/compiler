@@ -1,0 +1,127 @@
+programs'->programs
+programs->program programs1 {programs.code=program.code||programs1.code}
+programs->epsilon
+program->basic1 id ( {env=new Env(env);} para_decl ) '{' decl stmts return expr ; '}'
+{fun=new Fun(basic1.type,id.lexeme,Share.parameters_deftype);
+funList.add(fun);Save(env);env=env.pre;stmts.next=new label();
+check(basic2.type match basic1.type);
+program.code=gen(id.lexeme':')||stmts.code;}
+para_decl->type id , {Share.parameters_deftype.enqueue(type.type);check(id.lexeme);env.put(id.lexeme,type.type)} para_decl
+para_decl->epsilon
+block->'{' {env=new Env(env)} decl  stmts '}' {Save(env);env=env.pre;stmts.next=new label();block.code=stmts.code;}
+decl->type id ; {check(id.lexeme);env.put(id.lexeme,type.type);} decl
+decl->epsilon
+type->basic {temp=basic.type;} star {type.type=star.type;}
+type->basic {temp=basic.type;} column {type.type=column.type;}
+type->struct '{' {envStack.push(env);env=new Env(null);} decl '}' {type.type=new Struct(env,depth);env=envStack.pop();}
+basic->int {basic.type=int;}
+basic->float {basic.type=float;}
+basic->void {basic.type=void;}
+column->epsilon {column.type=temp;}
+star-> epsilon {star.type=temp;}
+column->[ num ] column1 {column.type=new Array(num.value,column1.type);}
+star->* star1{star.type=new Star(star1.type);}
+stmts1->stmt1 stmts2{stmt1.next=new label();stmts2.next=stmts1.next;stmts1.code=stmt1.code||stmts2.code;}
+stmts->epsilon
+stmt->id = expr ; { check:id.type=env.get(id.lexeme);match(id.type,expr.type);stmt.code=expr.code||
+if(expr.type!=id.type)
+gen(id.lexeme'=('+id.type')'+expr.addr);
+else gen(id.lexeme'='+expr.addr);}
+stmt->left_array = expr ; {match(left_array.subtype,expr.type);stmt.code=left_array.code||expr.code||
+gen(left_array.base'['left_array.addr']''='expr.addr);}
+stmt->left_str id = expr ;{check:id.type=(struct)left_str.type.env.get(id.lexeme);match(id.type,expr.type);
+stmt.code=left_str.code||expr.code||gen(left_str.addr'.'id.lexeme'='expr.addr);}
+expr->expr1 + term {expr.addr=new Temp();expr.type=match(expr1.type,term.type);
+expr.code=expr1.code||term.code||
+if (expr1.type!=expr.type)
+gen(expr.addr+'=('+expr.type+')'+expr1.addr'+'term.addr);
+else if(term.type!=expr.type)
+gen(expr.addr'='expr1.addr'+('+expr.type+')'+term.addr);
+else gen(expr.addr'='expr1.addr'+'term.addr);
+}
+expr->expr1 - term {expr.addr=new Temp();expr.type=match(expr1,type,term.type);
+expr.code=expr1.code||term.code||
+if (expr1.type!=expr.type)
+gen(expr.addr'=('+expr.type+')'+expr1.addr'-'term.addr);
+else if(term.type!=expr.type)
+gen(expr.addr'='expr1.addr'-('+expr.type+')'+term.addr);
+else gen(expr.addr'='expr1.addr'-'term.addr)
+}
+factor->id {check:id.type=env.get(id.lexeme) factor.addr=id.lexeme;factor.type=id.type;}
+expr->term {expr.type=term.type;expr.addr=term.addr;expr.code=term.code;}
+term->term1 * factor {term.addr=new Temp();term.type=match(term1.type,factor.type);
+term.code=term1.code||factor.code||
+if (term1.type!=term.type)
+gen(term.addr'=('+term.type+')'+term1.addr'*'factor.addr);
+else if(factor.type!=term.type)
+gen(term.addr'='term1.addr'*('+term.type+')'+factor.addr);
+else gen(expr.addr'='expr1.addr'*'term.addr)
+}
+term->term1 / factor {term.addr=new Temp();term.type=match(term1.type,factor.type);
+term.code=term1.code||factor.code||
+if (term1.type!=term.type)
+gen(term.addr'=('+term.type+')'+term1.addr'/'factor.addr);
+else if(factor.type!=term.type)
+gen(term.addr'='term1.addr'/('+term.type+')'+factor.addr);
+else gen(expr.addr'='expr1.addr'/'term.addr)
+}
+term->factor {term.addr=factor.addr;term.type=factor.type;term.code=factor.code;}
+factor->( expr ) {factor.type=expr.type;factor.addr=expr.addr;factor.code=expr.code;}
+expr->left_array {expr.addr=new Temp();expr.code=left_array.code||
+gen(expr.addr'='left_array.base'['left_array.addr']');expr.type=left_array.subtype;}
+expr->left_str id {check:id.type=(struct)left_str.type.env.get(id.lexeme);expr.type=id.type;
+expr.addr=new Temp();expr.code=left_str.code||gen(expr.addr'='left_str.addr'.'id.lexeme);}
+factor->num {factor.addr=num.value;factor.type=Type.Int;}
+factor->real {factor.addr=real.value;factor.type=Type.Float;}
+left_str->id . {check:id.type=env.get(id.lexeme) is struct;left_str.type=id.type;
+left_str.addr=id.lexeme;}
+left_str->left_str1 id . {new_env=(struct)left_str1.type.env;check:id.type=new_env.get(id.lexeme) is struct;
+left_str.type=id.type;left_str.addr=new Temp();
+left_str.code=left_str1.code||gen(left_str.addr'='left_str1.addr'.'id.lexeme);}
+left_array->id [ expr ] {id.type=check(id.lexeme) is array;left_array.type=env.get(id.lexeme);
+left_array.base=id;left_array.subtype=(Array)left_array.type.of;check(expr.type is int);
+left_array.addr=new Temp();left_array.code=expr.code||gen(left_array.addr'='expr.addr'*'left_array.subtype.width)}
+left_array->left_array1 [ expr ] {left_array.type=left_array1.type;left_array.subtype=(Array)left_array1.subtype.of;check(expr.type is int);
+left_array.base=left_array1.base;t=new Temp();left_array.addr=new Temp();left_array.code=left_array1.code||expr.code||
+gen(t'='expr.addr'*'left_array.subtype.width)||gen(left_array.addr'='left_array1.addr'+'t);}
+stmt->if ( bool )  stmt1 {bool.true=fall;bool.false=stmt1.next=stmt.next;stmt.code=bool.code||stmt1.code||stmt.next;}
+stmt->if ( bool ) stmt1 else stmt2 {bool.true=fall;bool.false=new label();
+     stmt1.next=stmt2.next=stmt.next;stmt.code=bool.code||stmt1.code||gen('goto' stmt.next)||
+     bool.false||stmt2.code||stmt.next;}
+stmt->while ( bool ) stmt1 {begin=new label();bool.true=fall;bool.false=stmt.next;
+Enclosing_next.push(stmt.next);stmt1.next=begin;
+stmt.code=begin||bool.code||stmt1.code||gen('goto' begin)||stmt.next;}
+stmt->break ;{check:!Enclosing.next.isempty() ;stmt.code=gen("goto" Enclosing.next.pop(););}
+stmt->do stmt1 while ( bool ) ; {begin=new label();bool.false=fall;bool.true=begin;Enclosing_next.push(stmt.next);
+stmt.code=begin||stmt1.code||bool.code||stmt.next ;}
+stmt->for ( stmt_semi1 bool ; stmt_semi2 ) stmt1{begin=new begin();bool.true=fall;bool.false=stmt.next;Enclosing_next.push(stmt.next)
+stmt1.next=begin;stmt.code=stmt_semi1.code||begin||bool.code||stmt1.code||stmt_semi2.code||gen('goto' begin)||stmt.next;}
+stmt_semi->stmt{stmt_semi.code=stmt.code;}
+stmt_semi->;
+stmt->id ( expr_list ) ; {check:funList().contains(id.lexeme);n=0;check(parameters_calltype match fun.parameterstype);
+while(!queue.empty) {n++;p=queue.dequeue();stmt.code=stmt.code||gen('param' p);} stmt.code=stmt.code||
+gen('call' id.lexeme ',' n);}
+stmt->block {stmt.code=block.code;}
+expr_list->expr_list1 expr , {Share.parameters_calladdr.enqueue(expr.addr);Share.parameters_calltype.enqueue(expr.type)}
+expr_list->epsilon {Share.parameters_calladdr=new queue();Share.parameters_calltype=new queue();}
+bool->bool1 || bool2 {bool1.true=bool.true!=fall?bool.true:new label();bool1.false=fall;bool2.true=bool.true;
+bool2.false=bool.false;bool.code=bool.true!=fall?bool1.code||bool2.code:bool1.code||bool2.code||bool1.true;}
+bool->bool1 && bool2 {bool1.false=bool.false!=fall?bool.false:new label();bool1.true=fall;bool2.true=bool.true;
+bool2.false=bool.false;bool.code=bool.false!=fall?bool1.code||bool2.code:bool1.code||bool2.code||bool1.false;}
+bool->! bool1 {bool1.true=bool.false;bool1.false=bool.true;bool.code=bool1.code;}
+bool-> expr1 rel expr2 {test=expr1.addr rel.addr expr2.addr
+common=gen(expr1.code)+gen(expr2.code);
+if bool.true!=fall and bool.false!=fall :
+bool.code=gen('if' test 'goto' bool.true)||gen('goto' bool.false);
+else if bool.true!=fall bool.code=gen('if' test 'goto' bool.true);
+else if bool.false!=fall bool.code=gen('ifFalse' test 'goto' bool.false);
+bool.code=common+gen(bool.code);
+}
+bool->true {bool.code=gen('goto' bool.true);}
+bool->false {bool.code=gen('goto' bool.false);}
+rel-> < {rel.addr="<"}
+rel-> <= {rel.addr="<="}
+rel-> > {rel.addr=">"}
+rel-> >= {rel.addr=">="}
+rel-> == {rel.addr="=="}
+rel-> != {rel.addr="!="}

@@ -1,29 +1,26 @@
-programs'::basic void epsilon
-programs::basic void epsilon
-program::basic void
-retype::basic void
+programs'::int float void epsilon
+programs::int float void epsilon
+program::int float void
+para_decl::int float void struct epsilon
 block::{
-decls::basic epsilon struct
-decl::basic struct
-type::basic struct
-type'::[ epsilon
-stmts::id if while do break { epsilon return
-stmt::id if while do break { return
-parameter::! -
-parameters::! - epsilon
-loc::id
-loc'::[ epsilon
-bool::! -
-bool'::|| epsilon
-join::! -
-join'::&& epsilon
-equality::! -
-equality'::== != epsilon
-rel::! -
-expr::! -
-expr'::+ - epsilon
-term::! -
-term'::* / epsilon
-unary::! -
-unary::( id num real true false
-factor::( id num real true false
+decl::int float void struct epsilon
+type::int float void struct
+basic::int float void
+column::[ epsilon
+stmts::id if while epsilon { do for break
+stmt::id if while { do for break
+stmt_semi::id if while { do for ; break
+expr::id num real (
+factor::id num real (
+term::id num real (
+left_array::id
+left_str::id
+expr_list::id num real epsilon
+bool::! true false id num real
+rel::< <= > >= == !=
+star::* epsilon
+M0::epsilon
+M1::epsilon
+M2::epsilon
+M3::epsilon
+M4::epsilon
